@@ -87,7 +87,7 @@ public class ApplicationMaster {
                     ));
             ctx.setLocalResources(
                     Collections.singletonMap("package", packageResource));
-            System.out.println("Launching container " + container.getId());
+            System.out.println("Launching container " + container.getId() + ", " + container.getNodeHttpAddress());
             System.out.println("Command " + command);
             nmClient.startContainer(container, ctx);
         }
