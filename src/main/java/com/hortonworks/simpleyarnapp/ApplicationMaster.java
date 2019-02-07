@@ -1,20 +1,19 @@
 package com.hortonworks.simpleyarnapp;
 
+import java.io.File;
 import java.util.Collections;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileContext;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.yarn.api.ApplicationConstants;
 import org.apache.hadoop.yarn.api.protocolrecords.AllocateResponse;
-import org.apache.hadoop.yarn.api.records.Container;
-import org.apache.hadoop.yarn.api.records.ContainerLaunchContext;
-import org.apache.hadoop.yarn.api.records.ContainerStatus;
-import org.apache.hadoop.yarn.api.records.FinalApplicationStatus;
-import org.apache.hadoop.yarn.api.records.Priority;
-import org.apache.hadoop.yarn.api.records.Resource;
+import org.apache.hadoop.yarn.api.records.*;
 import org.apache.hadoop.yarn.client.api.AMRMClient;
 import org.apache.hadoop.yarn.client.api.AMRMClient.ContainerRequest;
 import org.apache.hadoop.yarn.client.api.NMClient;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
+import org.apache.hadoop.yarn.util.ConverterUtils;
 import org.apache.hadoop.yarn.util.Records;
 
 public class ApplicationMaster {
@@ -23,6 +22,7 @@ public class ApplicationMaster {
 
     final String command = args[0];
     final int n = Integer.valueOf(args[1]);
+    final String jarpath = args[3];
     
     // Initialize clients to ResourceManager and NodeManagers
     Configuration conf = new YarnConfiguration();
@@ -56,6 +56,19 @@ public class ApplicationMaster {
       rmClient.addContainerRequest(containerAsk);
     }
 
+      File packageFile = new File(jarpath);
+      URL packageUrl = ConverterUtils.getYarnUrlFromPath(
+              FileContext.getFileContext().makeQualified(new Path(jarpath)));
+
+      LocalResource packageResource = Records.newRecord(LocalResource.class);
+
+
+      packageResource.setResource(packageUrl);
+      packageResource.setSize(packageFile.length());
+      packageResource.setTimestamp(packageFile.lastModified());
+      packageResource.setType(LocalResourceType.ARCHIVE);
+      packageResource.setVisibility(LocalResourceVisibility.APPLICATION);
+
     // Obtain allocated containers, launch and check for responses
     int responseId = 0;
     int completedContainers = 0;
@@ -72,6 +85,8 @@ public class ApplicationMaster {
                                     " 1>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stdout" +
                                     " 2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr"
                     ));
+            ctx.setLocalResources(
+                    Collections.singletonMap("package", packageResource));
             System.out.println("Launching container " + container.getId());
             nmClient.startContainer(container, ctx);
         }
