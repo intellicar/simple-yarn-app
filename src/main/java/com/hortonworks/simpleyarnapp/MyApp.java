@@ -7,6 +7,7 @@ public class MyApp {
 
         int n = 0;
         while( n < 60){
+            System.out.println("SLEEPING");
             try {
                 Thread.sleep(1000);
             }
