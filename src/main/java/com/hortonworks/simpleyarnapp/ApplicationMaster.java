@@ -22,7 +22,7 @@ public class ApplicationMaster {
 
     final String command = args[0];
     final int n = Integer.valueOf(args[1]);
-    final String jarpath = args[3];
+    final String jarpath = args[2];
     
     // Initialize clients to ResourceManager and NodeManagers
     Configuration conf = new YarnConfiguration();
