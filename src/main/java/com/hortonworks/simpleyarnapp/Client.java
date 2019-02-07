@@ -57,6 +57,7 @@ public class Client {
             " com.hortonworks.simpleyarnapp.ApplicationMaster" +
             " " + command +
             " " + String.valueOf(n) +
+            " " + jarPath +
             " 1>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stdout" + 
             " 2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr" 
             )
