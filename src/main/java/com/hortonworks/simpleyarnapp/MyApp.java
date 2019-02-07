@@ -11,8 +11,9 @@ public class MyApp {
                 Thread.sleep(1000);
             }
             catch (Exception e){
-                
+
             }
+            ++n;
         }
     }
 }

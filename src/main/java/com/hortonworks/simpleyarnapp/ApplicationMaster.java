@@ -67,6 +67,7 @@ public class ApplicationMaster {
                     Records.newRecord(ContainerLaunchContext.class);
             ctx.setCommands(
                     Collections.singletonList(
+                            "$JAVA_HOME/bin/java -Xmx256M " +
                             command +
                                     " 1>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stdout" +
                                     " 2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr"
