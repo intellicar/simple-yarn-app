@@ -88,6 +88,7 @@ public class ApplicationMaster {
             ctx.setLocalResources(
                     Collections.singletonMap("package", packageResource));
             System.out.println("Launching container " + container.getId());
+            System.out.println("Command " + command);
             nmClient.startContainer(container, ctx);
         }
         for (ContainerStatus status : response.getCompletedContainersStatuses()) {
