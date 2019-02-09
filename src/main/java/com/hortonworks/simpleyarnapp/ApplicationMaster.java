@@ -61,8 +61,9 @@ public class ApplicationMaster {
 
       File packageFile = new File(jarpath);
       Path packagePath = new Path(jarpath);
-      URL packageUrl = ConverterUtils.getYarnUrlFromPath(
-              FileContext.getFileContext().makeQualified(new Path(jarpath)));
+      //URL packageUrl = ConverterUtils.getYarnUrlFromPath(
+      //        FileContext.getFileContext().makeQualified(new Path(jarpath)));
+      URL packageUrl = ConverterUtils.getYarnUrlFromPath(new Path(jarpath));
 
       LocalResource packageResource = Records.newRecord(LocalResource.class);
 
@@ -71,7 +72,7 @@ public class ApplicationMaster {
       packageResource.setResource(packageUrl);
       packageResource.setSize(jarStat.getLen());
       packageResource.setTimestamp(jarStat.getModificationTime());
-      packageResource.setType(LocalResourceType.ARCHIVE);
+      packageResource.setType(LocalResourceType.FILE);
       packageResource.setVisibility(LocalResourceVisibility.APPLICATION);
 
     // Obtain allocated containers, launch and check for responses
@@ -91,7 +92,7 @@ public class ApplicationMaster {
                                     " 2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr"
                     ));
             ctx.setLocalResources(
-                    Collections.singletonMap("package", packageResource));
+                    Collections.singletonMap("package.jar", packageResource));
             System.out.println("Launching container " + container.getId() + ", " + container.getNodeHttpAddress());
             System.out.println("Command " + command);
             nmClient.startContainer(container, ctx);
