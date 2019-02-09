@@ -3,6 +3,8 @@ package com.hortonworks.simpleyarnapp;
 import java.io.File;
 import java.net.URI;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileContext;
@@ -16,6 +18,7 @@ import org.apache.hadoop.yarn.client.api.AMRMClient;
 import org.apache.hadoop.yarn.client.api.AMRMClient.ContainerRequest;
 import org.apache.hadoop.yarn.client.api.NMClient;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
+import org.apache.hadoop.yarn.util.Apps;
 import org.apache.hadoop.yarn.util.ConverterUtils;
 import org.apache.hadoop.yarn.util.Records;
 
@@ -92,6 +95,19 @@ public class ApplicationMaster {
                     ));
             ctx.setLocalResources(
                     Collections.singletonMap("package", packageResource));
+
+            Map<String, String> appMasterEnv = new HashMap<String, String>();
+            for (String c : conf.getStrings(
+                    YarnConfiguration.YARN_APPLICATION_CLASSPATH,
+                    YarnConfiguration.DEFAULT_YARN_APPLICATION_CLASSPATH)) {
+                Apps.addToEnvironment(appMasterEnv, ApplicationConstants.Environment.CLASSPATH.name(),
+                        c.trim());
+            }
+            Apps.addToEnvironment(appMasterEnv,
+                    ApplicationConstants.Environment.CLASSPATH.name(),
+                    ApplicationConstants.Environment.PWD.$() + File.separator + "*");
+            ctx.setEnvironment(appMasterEnv);
+
             System.out.println("Launching container " + container.getId() + ", " + container.getNodeHttpAddress());
             System.out.println("Command " + command);
             nmClient.startContainer(container, ctx);
