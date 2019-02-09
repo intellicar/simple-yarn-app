@@ -1,10 +1,13 @@
 package com.hortonworks.simpleyarnapp;
 
 import java.io.File;
+import java.net.URI;
 import java.util.Collections;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileContext;
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.yarn.api.ApplicationConstants;
 import org.apache.hadoop.yarn.api.protocolrecords.AllocateResponse;
@@ -57,15 +60,17 @@ public class ApplicationMaster {
     }
 
       File packageFile = new File(jarpath);
+      Path packagePath = new Path(jarpath);
       URL packageUrl = ConverterUtils.getYarnUrlFromPath(
               FileContext.getFileContext().makeQualified(new Path(jarpath)));
 
       LocalResource packageResource = Records.newRecord(LocalResource.class);
 
 
+      FileStatus jarStat = FileSystem.get(conf).getFileStatus(packagePath);
       packageResource.setResource(packageUrl);
-      packageResource.setSize(packageFile.length());
-      packageResource.setTimestamp(packageFile.lastModified());
+      packageResource.setSize(jarStat.getLen());
+      packageResource.setTimestamp(jarStat.getModificationTime());
       packageResource.setType(LocalResourceType.ARCHIVE);
       packageResource.setVisibility(LocalResourceVisibility.APPLICATION);
 
