@@ -94,6 +94,8 @@ public class ApplicationMaster {
         for (ContainerStatus status : response.getCompletedContainersStatuses()) {
             ++completedContainers;
             System.out.println("Completed container " + status.getContainerId());
+	    System.out.println("Diagonostics container " + status.getDiagnostics());
+            System.out.println("Exit status container " + status.getExitStatus());
         }
         Thread.sleep(100);
     }
