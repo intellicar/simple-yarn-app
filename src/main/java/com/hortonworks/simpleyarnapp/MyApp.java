@@ -20,6 +20,8 @@ public class MyApp {
         FileSystem fs = FileSystem.get(URI.create(uri), config);
         boolean isCreated = fs.mkdirs(new Path(directory));
 
+        System.out.println("Directory path " + directory);
+
         if (isCreated) {
             System.out.println("Directory created");
         } else {

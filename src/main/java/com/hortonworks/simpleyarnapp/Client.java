@@ -110,6 +110,10 @@ public class Client {
   }
   
   private void setupAppMasterJar(Path jarPath, LocalResource appMasterJar) throws IOException {
+
+    FileSystem fs = FileSystem.get(conf);
+    System.out.println("FILE SYSTEM : " + fs.getScheme());
+
     FileStatus jarStat = FileSystem.get(conf).getFileStatus(jarPath);
     appMasterJar.setResource(ConverterUtils.getYarnUrlFromPath(jarPath));
     appMasterJar.setSize(jarStat.getLen());
