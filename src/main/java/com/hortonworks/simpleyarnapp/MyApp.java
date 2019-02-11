@@ -32,7 +32,7 @@ public class MyApp {
 
     public static void main(String[] args) {
 
-        String id = args[1];
+        String id = args[0];
 
         try {
             createDirectory(id);
