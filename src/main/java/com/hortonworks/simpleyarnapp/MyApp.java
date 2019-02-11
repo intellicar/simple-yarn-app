@@ -9,7 +9,7 @@ import java.net.URI;
 
 public class MyApp {
 
-    private static final String uri = "hdfs://hadoop1/user1/";
+    private static final String uri = "hdfs://hadoop1";
 
     private static final Configuration config = new Configuration();
 
@@ -32,10 +32,14 @@ public class MyApp {
 
     public static void main(String[] args) {
 
+        String basedir = "/user1";
+
         String id = args[0];
 
+        String dir = basedir + "/" + id;
+
         try {
-            createDirectory(id);
+            createDirectory(dir);
         }
         catch (Exception e){
             e.printStackTrace();
