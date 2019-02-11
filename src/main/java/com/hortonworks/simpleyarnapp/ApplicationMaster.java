@@ -81,6 +81,7 @@ public class ApplicationMaster {
     // Obtain allocated containers, launch and check for responses
     int responseId = 0;
     int completedContainers = 0;
+    int containerId = 0;
     while (completedContainers < n) {
         AllocateResponse response = rmClient.allocate(responseId++);
         for (Container container : response.getAllocatedContainers()) {
@@ -90,7 +91,7 @@ public class ApplicationMaster {
             ctx.setCommands(
                     Collections.singletonList(
                             "$JAVA_HOME/bin/java -Xmx256M " +
-                            command +
+                            command + " " + containerId +
                                     " 1>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stdout" +
                                     " 2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr"
                     ));
