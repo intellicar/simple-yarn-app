@@ -64,8 +64,9 @@ public class ApplicationMaster {
 
       File packageFile = new File(jarpath);
       Path packagePath = new Path(jarpath);
-      URL packageUrl = ConverterUtils.getYarnUrlFromPath(
-              FileContext.getFileContext().makeQualified(new Path(jarpath)));
+      /*URL packageUrl = ConverterUtils.getYarnUrlFromPath(
+              FileContext.getFileContext().makeQualified(new Path(jarpath)));*/
+      URL packageUrl = ConverterUtils.getYarnUrlFromPath(new Path(jarpath));
 
       LocalResource packageResource = Records.newRecord(LocalResource.class);
 
@@ -74,8 +75,8 @@ public class ApplicationMaster {
       packageResource.setResource(packageUrl);
       packageResource.setSize(jarStat.getLen());
       packageResource.setTimestamp(jarStat.getModificationTime());
-      packageResource.setType(LocalResourceType.ARCHIVE);
-      packageResource.setVisibility(LocalResourceVisibility.APPLICATION);
+      packageResource.setType(LocalResourceType.FILE);
+      packageResource.setVisibility(LocalResourceVisibility.PUBLIC);
 
     // Obtain allocated containers, launch and check for responses
     int responseId = 0;
